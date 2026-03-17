@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+//populate the model with the fields of the table employee
 class employee extends Model
 {
     Protected $primaryKey = "id";
