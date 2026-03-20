@@ -95,6 +95,9 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
                                 <i class="fas fa-info-circle mr-2"></i>Estado
                             </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">
+                                <i class="fas fa-info-circle mr-2"></i>Foto
+                            </th>
                             <th class="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">
                                 <i class="fas fa-cog mr-2"></i>Acciones
                             </th>
@@ -140,6 +143,10 @@
                                             {{ $empleado->status ?? 'N/A' }}
                                         </span>
                                     @endif
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    {{-- <span class="text-sm text-gray-600">{{ $empleado->reference_photo_url ?? 'N/A' }}</span> --}}
+                                    <img src="{{ asset($empleado->reference_photo_url) }}" alt="Foto de referencia" class="w-10 h-10 rounded-full">
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-center">
                                     <div class="flex items-center justify-center space-x-2">

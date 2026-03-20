@@ -60,7 +60,7 @@
                         <select name="type" 
                                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
                             <option value="">Todos los tipos</option>
-                            <option value="entrada" {{ request('type') == 'entrada' ? 'selected' : '' }}>ENTRADA</option>
+                            <option value="ingreso" {{ request('type') == 'ingreso' ? 'selected' : '' }}>ENTRADA</option>
                             <option value="salida" {{ request('type') == 'salida' ? 'selected' : '' }}>SALIDA</option>
                         </select>
                     </div>
@@ -135,7 +135,7 @@
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($ingreso->type == 'entrada')
+                                    @if($ingreso->type == 'ingreso')
                                         <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
                                             <i class="fas fa-sign-in-alt mr-1"></i>ENTRADA
                                         </span>
@@ -151,8 +151,8 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     @if($ingreso->photourl)
-                                        <a href="{{ $ingreso->photourl }}" target="_blank" class="inline-block">
-                                            <img src="{{ $ingreso->photourl }}" 
+                                        <a href="{{ asset($ingreso->photourl) }}" target="_blank" class="inline-block">
+                                            <img src="{{ asset($ingreso->photourl) }}" 
                                                  alt="Foto del registro" 
                                                  class="w-16 h-16 object-cover rounded-lg border-2 border-gray-200 hover:border-indigo-500 transition-colors cursor-pointer"
                                                  onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'64\' height=\'64\'%3E%3Crect fill=\'%23ddd\' width=\'64\' height=\'64\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' fill=\'%23999\'%3ENo Image%3C/text%3E%3C/svg%3E'">

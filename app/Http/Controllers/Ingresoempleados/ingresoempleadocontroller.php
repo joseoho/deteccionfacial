@@ -17,6 +17,9 @@ class ingresoempleadocontroller extends Controller
      */
     public function index(Request $request)
     {
+        // Establecer zona horaria para la consulta
+        Carbon::setLocale('es');
+        
         $query = timemark::query();
         
         // Búsqueda
@@ -34,7 +37,7 @@ class ingresoempleadocontroller extends Controller
         
         // Filtro por fecha
         if ($request->has('fecha') && !empty($request->fecha)) {
-            $fecha = Carbon::parse($request->fecha);
+            $fecha = Carbon::parse($request->fecha, 'America/Caracas');
             $query->whereDate('created_at', $fecha);
         }
         
@@ -48,6 +51,7 @@ class ingresoempleadocontroller extends Controller
      */
     public function create()
     {
+        // Usar zona horaria de Venezuela
         $fecha = Carbon::now('America/Caracas');
         $empleados = employee::get();
         $ingresos = timemark::orderBy('created_at', 'desc')->take(10)->get();
@@ -59,34 +63,55 @@ class ingresoempleadocontroller extends Controller
      */
     public function store(Request $request)
     {
-       $baseDIR = public_path('uploads/' . date("m", time()) . "/");
-       $baseURL = url('uploads/' . date("m", time()) . "/");
-  
-  if (!file_exists($baseDIR)) {
-    mkdir($baseDIR, 0755, true);
-  }
+        // Usar zona horaria de Venezuela
+        $now = Carbon::now('America/Caracas');
+        
+        // Obtener el mes actual para organizar las carpetas
+        $mes = $now->format('m');
+        $anio = $now->format('Y');
+        
+        // Crear estructura de carpetas: uploads/2026/03/
+        $baseDIR = public_path('uploads/' . $anio . '/' . $mes . "/");
+        $relativePath = 'uploads/' . $anio . '/' . $mes . "/";
 
+        // Crear directorio si no existe
+        if (!file_exists($baseDIR)) {
+            mkdir($baseDIR, 0755, true);
+        }
 
-             $cedula=$request->empleado_id;
-             $img    = $request->get('data_url');
-             $img    = str_replace('data:image/png;base64,', '', $img);
-             $img    = str_replace(' ', '+', $img);
-             $decodifica = base64_decode($img,true);
-             $extension  = "png";
-             $filename = Str::random(10).$cedula .'.'.$extension;
-             $path    = $baseDIR;
-             $success = file_put_contents($baseDIR .$filename,$decodifica);
-             $imageURL = $baseURL . $filename;
-                            if (employee::where('cinumber', $cedula)->exists()) {
-                                $seregistraempleado = new timemark();
-                                $seregistraempleado->cinumber = $request->input('empleado_id');
-                                $seregistraempleado->photourl = ltrim($imageURL, '.');
-                                $seregistraempleado->save();
-                                return back()->with('notification', 'Registrado');
-                             }
-                            
-                                 return back()->with('noexiste', 'cedula no registrada, verifique');//buenoi
-                            
+        $cedula = $request->empleado_id;
+        $img = $request->get('data_url');
+        $img = str_replace('data:image/png;base64,', '', $img);
+        $img = str_replace(' ', '+', $img);
+        $decodifica = base64_decode($img, true);
+        
+        // Generar nombre único para la imagen
+        $filename = Str::random(10) . '_' . $cedula . '_' . $now->timestamp . '.png';
+        
+        // Guardar la imagen
+        file_put_contents($baseDIR . $filename, $decodifica);
+        
+        // Guardar SOLO la ruta relativa
+        $imagePath = $relativePath . $filename;
+        
+        // Verificar si el empleado existe
+        if (employee::where('cinumber', $cedula)->exists()) {
+            $seregistraempleado = new timemark();
+            $seregistraempleado->cinumber = $request->input('empleado_id');
+            $seregistraempleado->photourl = $imagePath;
+            $seregistraempleado->type = 'ingreso';
+            
+            // Forzar la fecha/hora de creación
+            $seregistraempleado->created_at = $now;
+            $seregistraempleado->updated_at = $now;
+            
+            $seregistraempleado->save();
+            
+            return back()->with('notification', 'Registro exitoso - ' . $now->format('d/m/Y h:i:s A'));
+        }
+        
+        return back()->with('noexiste', 'Cédula no registrada, verifique');
+
     }
 
     /**
@@ -118,6 +143,19 @@ class ingresoempleadocontroller extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $ingreso = timemark::findOrFail($id);
+        
+        // Eliminar la imagen si existe
+        if ($ingreso->photourl) {
+            $imagePath = public_path($ingreso->photourl);
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }
+        
+        $ingreso->delete();
+        
+        return redirect()->route('IngresoEmpleado.index')
+            ->with('success', 'Registro eliminado exitosamente');
     }
 }

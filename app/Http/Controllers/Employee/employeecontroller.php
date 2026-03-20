@@ -72,6 +72,7 @@ class employeecontroller extends Controller
         $empleado->role = $request->role;
         $empleado->status = $request->status;
         $empleado->note = $request->note;
+        $empleado->reference_photo_url = null;
 
         // Procesar foto de referencia si existe
         if ($request->has('reference_photo') && !empty($request->reference_photo)) {
@@ -124,6 +125,7 @@ class employeecontroller extends Controller
         $empleado->role = $request->role;
         $empleado->status = $request->status;
         $empleado->note = $request->note;
+        $empleado->reference_photo_url = $empleado->reference_photo_url; // Mantener la foto actual por defecto
 
         // Procesar nueva foto de referencia si existe
         if ($request->has('reference_photo') && !empty($request->reference_photo)) {
@@ -171,21 +173,22 @@ class employeecontroller extends Controller
      */
     private function savePhoto($base64Image, $cinumber)
     {
-        $baseDIR = public_path('uploads/employees/' . date("Y/m", time()) . "/");
-        $baseURL = url('uploads/employees/' . date("Y/m", time()) . "/");
+            $baseDIR = public_path('uploads/employees/' . date("Y/m", time()) . "/");
+    $relativePath = 'uploads/employees/' . date("Y/m", time()) . "/";
 
-        if (!file_exists($baseDIR)) {
-            mkdir($baseDIR, 0755, true);
-        }
-
-        $img = str_replace('data:image/png;base64,', '', $base64Image);
-        $img = str_replace(' ', '+', $img);
-        $decodifica = base64_decode($img, true);
-        $extension = "png";
-        $filename = Str::random(10) . '_' . $cinumber . '.' . $extension;
-        
-        file_put_contents($baseDIR . $filename, $decodifica);
-        
-        return $baseURL . $filename;
+    if (!file_exists($baseDIR)) {
+        mkdir($baseDIR, 0755, true);
     }
+
+    $img = str_replace('data:image/png;base64,', '', $base64Image);
+    $img = str_replace(' ', '+', $img);
+    $decodifica = base64_decode($img, true);
+    $extension = "png";
+    $filename = Str::random(10) . '_' . $cinumber . '.' . $extension;
+    
+    file_put_contents($baseDIR . $filename, $decodifica);
+    
+    // Guardar SOLO la ruta relativa, no la URL completa
+    return $relativePath . $filename;
+}
 }

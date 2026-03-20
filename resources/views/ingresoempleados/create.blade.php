@@ -128,7 +128,7 @@
                                         <i class="fas fa-calendar mr-1"></i>{{ $ingreso->created_at->format('d/m/Y H:i') }}
                                     </p>
                                 </div>
-                                <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $ingreso->type == 'entrada' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $ingreso->type == 'ingreso' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                     {{ strtoupper($ingreso->type ?? 'N/A') }}
                                 </span>
                             </div>

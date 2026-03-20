@@ -104,7 +104,7 @@
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    @if($ingreso->type == 'entrada')
+                                    @if($ingreso->type == 'ingreso')
                                         <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
                                             <i class="fas fa-sign-in-alt mr-1"></i>ENTRADA
                                         </span>
