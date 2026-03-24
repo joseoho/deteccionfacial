@@ -46,7 +46,33 @@
                 </div>
             </div>
         </nav>
-
+<div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+    <h3 class="text-blue-800 font-semibold mb-2">
+        <i class="fas fa-clock mr-2"></i>Horarios permitidos:
+    </h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
+        <div class="flex items-center text-green-700">
+            <i class="fas fa-sign-in-alt mr-2 w-5"></i>
+            <span><strong>ENTRADA:</strong> 06:00 - 09:30</span>
+        </div>
+        <div class="flex items-center text-red-700">
+            <i class="fas fa-sign-out-alt mr-2 w-5"></i>
+            <span><strong>SALIDA:</strong> 11:30 - 13:30</span>
+        </div>
+        <div class="flex items-center text-green-700">
+            <i class="fas fa-sign-in-alt mr-2 w-5"></i>
+            <span><strong>ENTRADA:</strong> 13:31 - 14:30</span>
+        </div>
+        <div class="flex items-center text-red-700">
+            <i class="fas fa-sign-out-alt mr-2 w-5"></i>
+            <span><strong>SALIDA:</strong> 17:00 en adelante</span>
+        </div>
+    </div>
+    <div class="mt-2 text-xs text-blue-600">
+        <i class="fas fa-info-circle mr-1"></i>
+        Hora actual: {{ \Carbon\Carbon::now('America/Caracas')->format('h:i:s A') }}
+    </div>
+</div>
         <!-- Main Content -->
         <main class="flex-1">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

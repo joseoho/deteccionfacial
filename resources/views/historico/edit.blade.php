@@ -117,7 +117,7 @@
                     <i class="fas fa-image text-indigo-600 mr-2"></i>Foto del Registro
                 </h3>
                 <div class="text-center">
-                    <img src="{{ $ingreso->photourl }}" 
+                    <img src="{{ asset($ingreso->photourl) }}" 
                          alt="Foto del registro" 
                          class="w-full rounded-lg border-2 border-gray-200 shadow-md">
                 </div>

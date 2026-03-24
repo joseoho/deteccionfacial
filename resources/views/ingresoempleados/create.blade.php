@@ -8,6 +8,7 @@
     <li><a href="{{ route('IngresoEmpleado.index') }}" class="text-gray-500 hover:text-indigo-600">Registro de Ingreso</a></li>
     <li><i class="fas fa-chevron-right text-gray-400 mx-2"></i></li>
     <li class="text-gray-900">Nuevo Registro</li>
+    
 @endsection
 
 @section('styles')
@@ -74,6 +75,7 @@
 @endsection
 
 @section('content')
+
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Main Content -->
         <div class="lg:col-span-2">

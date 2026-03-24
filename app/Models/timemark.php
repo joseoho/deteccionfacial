@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class timemark extends Model
 {
@@ -25,23 +26,41 @@ class timemark extends Model
         return $this->belongsTo(employee::class, 'cinumber', 'cinumber');
     }
 
-    // Campos de fecha que deben ser convertidos a instancias de Carbon
-    protected $dates = [
-        'created_at',
-        'updated_at'
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i:s',
+        'updated_at' => 'datetime:Y-m-d H:i:s',
     ];
     
-    // Accessor para created_at
-    public function getCreatedAtAttribute($value)
+    /**
+     * Mutator para created_at - ANTES de guardar en BD
+     */
+    public function setCreatedAtAttribute($value)
     {
-        return \Carbon\Carbon::parse($value)->timezone('America/Caracas');
+        $this->attributes['created_at'] = $value;
     }
     
-    // Accessor para updated_at
+    /**
+     * Mutator para updated_at - ANTES de guardar en BD
+     */
+    public function setUpdatedAtAttribute($value)
+    {
+        $this->attributes['updated_at'] = $value;
+    }
+    
+    /**
+     * Accessor para created_at - DESPUÉS de leer de BD
+     */
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->timezone('America/Caracas');
+    }
+    
+    /**
+     * Accessor para updated_at - DESPUÉS de leer de BD
+     */
     public function getUpdatedAtAttribute($value)
     {
-        return \Carbon\Carbon::parse($value)->timezone('America/Caracas');
+        return Carbon::parse($value)->timezone('America/Caracas');
     }
-
 
 }

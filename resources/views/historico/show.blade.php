@@ -15,14 +15,14 @@
         <!-- Foto del Registro -->
         <div class="bg-white rounded-xl shadow-lg p-6">
             <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center border-b pb-3">
-                <i class="fas fa-image text-indigo-600 mr-2"></i>Foto del Registro
+                <i class="fas fa-image text-indigo-600 mr-2"></i>Foto del Registroo
             </h3>
             <div class="text-center">
                 @if($ingreso->photourl)
-                    <img src="{{ $ingreso->photourl }}" 
+                    <img src="{{ asset($ingreso->photourl) }}" 
                          alt="Foto del registro" 
                          class="w-full max-w-md mx-auto rounded-lg border-2 border-gray-200 shadow-md hover:shadow-xl transition-shadow cursor-pointer"
-                         onclick="window.open('{{ $ingreso->photourl }}', '_blank')"
+                         onclick="window.open('{{ asset($ingreso->photourl) }}', '_blank')"
                          onerror="this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'400\'%3E%3Crect fill=\'%23ddd\' width=\'400\' height=\'400\'/%3E%3Ctext x=\'50%25\' y=\'50%25\' text-anchor=\'middle\' dy=\'.3em\' fill=\'%23999\' font-size=\'20\'%3EImagen no disponible%3C/text%3E%3C/svg%3E'">
                     <p class="text-sm text-gray-500 mt-3">
                         <i class="fas fa-info-circle mr-1"></i>

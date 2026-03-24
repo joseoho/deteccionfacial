@@ -11,6 +11,16 @@
 @endsection
 
 @section('content')
+<style>
+@media print {
+    body * { visibility: hidden !important; }
+    #area-imprimir, #area-imprimir * { visibility: visible !important; }
+    #area-imprimir { position: absolute; left: 0; top: 0; width: 100%; }
+    @page { size: Letter; margin: 1cm; }
+    .btn, nav, header, footer { display: none !important; }
+}
+</style>
+
     <div class="bg-white rounded-xl shadow-lg p-6">
         <!-- Header del Reporte -->
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-6 border-b">
@@ -53,7 +63,7 @@
                     <p class="text-lg font-bold text-purple-600">{{ $fi->diffInDays($ff) + 1 }} días</p>
                 </div>
             </div>
-
+<div id="area-imprimir">
             <!-- Tabla de Resultados -->
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -158,4 +168,5 @@
             }
         }
     </style>
+</div>
 @endsection
