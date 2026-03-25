@@ -56,14 +56,14 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 ## License
 Pasos detallados para configurar Laravel desde Git:
-Clonar el Repositorio: Descarga el proyecto desde GitHub/GitLab usando git clone [url-del-repositorio] en tu terminal.
-Instalar Dependencias de PHP (Composer): Entra en la carpeta del proyecto y ejecuta composer install para descargar los paquetes necesarios.
-Configurar el Archivo de Entorno (.env):
+- **Clonar el Repositorio: Descarga el proyecto desde GitHub/GitLab usando git clone [url-del-repositorio] en tu terminal.**
+- **Instalar Dependencias de PHP (Composer): Entra en la carpeta del proyecto y ejecuta composer install para descargar los paquetes necesarios.**
+- **Configurar el Archivo de Entorno (.env):
 Copia el archivo de configuración de ejemplo: cp .env.example .env.
-Abre el archivo .env y configura la conexión a la base de datos (DB_DATABASE, DB_USERNAME, DB_PASSWORD).
-Generar la Clave de la Aplicación: Ejecuta php artisan key:generate para configurar la clave de cifrado de la aplicación.
-Ejecutar Migraciones de Base de Datos/No Aplica: 
-Instalar Dependencias de Frontend (Opcional): Si el proyecto usa compilación de activos (Vite/Mix), ejecuta npm install && npm run dev o npm run build.
-Iniciar el Servidor: Ejecuta php artisan serve para levantar el servidor local. 
+Abre el archivo .env y configura la conexión a la base de datos (DB_DATABASE, DB_USERNAME, DB_PASSWORD).**
+- **Generar la Clave de la Aplicación: Ejecuta php artisan key:generate para configurar la clave de cifrado de la aplicación.**
+- **Ejecutar Migraciones de Base de Datos/No Aplica:** 
+- **Instalar Dependencias de Frontend (Opcional): Si el proyecto usa compilación de activos (Vite/Mix), ejecuta npm install && npm run dev o npm run build.**
+- **Iniciar el Servidor: Ejecuta php artisan serve para levantar el servidor local.** 
 
-Asegúrate de tener PHP, Composer y MySQL/MariaDB instalados y configurados antes de iniciar, preferiblemente PHP 8.1 o superior.
+- **Asegúrate de tener PHP, Composer y MySQL/MariaDB instalados y configurados antes de iniciar, preferiblemente PHP 8.1 o superior.**
