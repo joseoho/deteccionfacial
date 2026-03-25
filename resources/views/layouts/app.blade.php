@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Detección Facial - Sistema de Control de Asistencia')</title>
+    <title>@yield('title', 'Sistema de Control de Asistencia')</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -28,7 +28,7 @@
                     <div class="flex items-center">
                         <a href="{{ route('home') }}" class="flex items-center space-x-3 text-white hover:text-gray-200 transition">
                             <i class="fas fa-face-recognition text-2xl"></i>
-                            <span class="text-xl font-bold">Detección Facial</span>
+                            <span class="text-xl font-bold">Control de Asistencia</span>
                         </a>
                     </div>
                     
@@ -143,7 +143,7 @@
         <footer class="bg-white border-t border-gray-200 mt-auto">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div class="flex flex-col md:flex-row justify-between items-center text-sm text-gray-600">
-                    <p>&copy; {{ date('Y') }} Sistema de Detección Facial. Todos los derechos reservados.</p>
+                    <p>&copy; {{ date('Y') }} Control de Asistencia. Todos los derechos reservados.</p>
                     <p class="mt-2 md:mt-0">
                         <i class="fas fa-code mr-1"></i>
                         Desarrollado con Laravel & Tailwind CSS

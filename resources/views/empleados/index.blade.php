@@ -9,6 +9,15 @@
 @endsection
 
 @section('content')
+<style>
+@media print {
+    body * { visibility: hidden !important; }
+    #area-imprimir, #area-imprimir * { visibility: visible !important; }
+    #area-imprimir { position: absolute; left: 0; top: 0; width: 100%; }
+    @page { size: Letter; margin: 1cm; }
+    .btn, nav, header, footer { display: none !important; }
+}
+</style>
     <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <div>
@@ -70,6 +79,7 @@
 
         @if($empleados->count() > 0)
             <!-- Información de resultados -->
+<div id="area-imprimir">
             <div class="mb-4 text-sm text-gray-600">
                 Mostrando <span class="font-semibold">{{ $empleados->firstItem() }}</span> a 
                 <span class="font-semibold">{{ $empleados->lastItem() }}</span> de 

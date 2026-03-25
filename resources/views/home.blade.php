@@ -16,7 +16,7 @@
                 <h1 class="text-4xl font-bold mb-2">
                     <i class="fas fa-hand-sparkles mr-3"></i>Bienvenido
                 </h1>
-                <p class="text-indigo-100 text-lg">Sistema de Control de Asistencia con Reconocimiento Facial</p>
+                <p class="text-indigo-100 text-lg">Sistema de Control de Asistencia </p>
             </div>
             <div class="hidden md:block">
                 <i class="fas fa-face-recognition text-8xl opacity-20"></i>
@@ -71,7 +71,7 @@
                     <i class="fas fa-camera text-indigo-600 text-2xl group-hover:text-white transition-colors"></i>
                 </div>
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Registrar Ingreso/Salida</h3>
-                <p class="text-gray-600 text-sm">Reconocimiento facial automático</p>
+                <p class="text-gray-600 text-sm">Control de asistencia</p>
             </div>
         </a>
 
@@ -114,7 +114,7 @@
                 <i class="fas fa-star text-yellow-500 mr-3"></i>Características del Sistema
             </h3>
             <div class="space-y-4">
-                <div class="flex items-start">
+                {{-- <div class="flex items-start">
                     <div class="bg-indigo-100 rounded-lg p-3 mr-4">
                         <i class="fas fa-face-recognition text-indigo-600"></i>
                     </div>
@@ -122,7 +122,7 @@
                         <h4 class="font-semibold text-gray-900">Reconocimiento Facial</h4>
                         <p class="text-gray-600 text-sm">Identificación automática mediante AWS Rekognition</p>
                     </div>
-                </div>
+                </div> --}}
                 <div class="flex items-start">
                     <div class="bg-green-100 rounded-lg p-3 mr-4">
                         <i class="fas fa-clock text-green-600"></i>

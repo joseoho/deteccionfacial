@@ -33,29 +33,25 @@ class HistoricoController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+        {
         set_time_limit(300);
         
-        // Si viene de la búsqueda en index, usar los parámetros guardados en sesión
-        if ($request->has('search') || $request->has('type')) {
-            $cedula = session('historico_cedula');
-            $fi = session('historico_fi');
-            $ff = session('historico_ff');
-        } else {
-            // Primera consulta, guardar en sesión
-            $cedula = $request->empleado_id;
-            $fi = Carbon::parse($request->fecha_ini.' 00:00:00');
-            $ff = Carbon::parse($request->fecha_fin.' 23:59:59');
-            
-            session(['historico_cedula' => $cedula]);
-            session(['historico_fi' => $fi]);
-            session(['historico_ff' => $ff]);
-        }
-       
+        // Validar los datos de entrada
+        $request->validate([
+            'empleado_id' => 'required|string',
+            'fecha_ini' => 'required|date',
+            'fecha_fin' => 'required|date|after_or_equal:fecha_ini',
+        ]);
+        
+        $cedula = $request->empleado_id;
+        $fi = Carbon::parse($request->fecha_ini . ' 00:00:00', 'America/Caracas');
+        $ff = Carbon::parse($request->fecha_fin . ' 23:59:59', 'America/Caracas');
+        
+        // Consulta base
         $query = timemark::where('cinumber', $cedula)
             ->whereBetween('created_at', [$fi, $ff]);
         
-        // Búsqueda adicional si existe
+        // Aplicar filtros adicionales si existen
         if ($request->has('search') && !empty($request->search)) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -64,19 +60,20 @@ class HistoricoController extends Controller
             });
         }
         
-        // Filtro por tipo
         if ($request->has('type') && !empty($request->type)) {
             $query->where('type', $request->type);
         }
         
-        $ingresos = $query->orderBy('created_at', 'asc')
+        // Ordenar y paginar
+        $ingresos = $query->orderBy('created_at', 'desc')
             ->paginate(15)
             ->withQueryString();
-          
-        if ($ingresos->count() > 0 || $request->has('search') || $request->has('type')) {
+        
+        if ($ingresos->count() > 0) {
             return view('historico.index', compact('ingresos', 'cedula', 'fi', 'ff'));
         } else {
-            return back()->with('noexiste', 'No se encontraron registros para el rango de fechas seleccionado.');
+            return redirect()->route('Historico.index')
+                ->with('noexiste', 'No se encontraron registros para el rango de fechas seleccionado.');
         }
     }
 

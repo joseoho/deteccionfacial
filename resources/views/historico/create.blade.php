@@ -71,6 +71,14 @@
                                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                 @enderror
                             </div>
+                            <div>
+                                <select name="type" 
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                                    <option value="">Todos los tipos</option>
+                                    <option value="ingreso" {{ request('type') == 'ingreso' ? 'selected' : '' }}>ENTRADA</option>
+                                    <option value="salida" {{ request('type') == 'salida' ? 'selected' : '' }}>SALIDA</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
 

@@ -81,7 +81,7 @@
         <div class="lg:col-span-2">
             <div class="bg-white rounded-xl shadow-lg p-6">
                 <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                    <i class="fas fa-camera text-indigo-600 mr-3"></i>Reconocimiento Facial
+                    <i class="fas fa-camera text-indigo-600 mr-3"></i>Captura de Imagen para Registro de Ingreso/Salida
                 </h2>
 
                 @include('ingresoempleados.form')
@@ -108,9 +108,13 @@
                         <i class="fas fa-check-circle mr-2 mt-1"></i>
                         <span>Mire directamente a la cámara</span>
                     </li>
-                    <li class="flex items-start">
+                    {{-- <li class="flex items-start">
                         <i class="fas fa-check-circle mr-2 mt-1"></i>
                         <span>El sistema detectará automáticamente su identidad</span>
+                    </li> --}}
+                    <li class="flex items-start">
+                        <i class="fas fa-check-circle mr-2 mt-1"></i>
+                        <span>Introduzca su documento de identidad y presione la tecla enter</span>
                     </li>
                 </ul>
             </div>

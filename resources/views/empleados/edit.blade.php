@@ -142,7 +142,7 @@
                     @if($empleado->reference_photo_url)
                         <div class="mb-4">
                             <p class="text-sm font-medium text-gray-700 mb-2">Foto Actual:</p>
-                            <img src="{{ $empleado->reference_photo_url }}" 
+                            <img src="{{ asset($empleado->reference_photo_url) }}" 
                                  alt="Foto actual" 
                                  class="max-w-full rounded-lg border-2 border-gray-300 shadow-md">
                             <p class="text-xs text-gray-500 mt-2">
@@ -154,7 +154,7 @@
                     <div>
                         <p class="text-sm text-gray-600 mb-4">
                             <i class="fas fa-info-circle mr-1"></i>
-                            Capture una foto clara del rostro del empleado para el reconocimiento facial
+                            Capture una foto clara del rostro del empleado
                         </p>
 
                         <div class="video-container mb-4">

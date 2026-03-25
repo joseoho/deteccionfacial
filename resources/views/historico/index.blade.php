@@ -11,6 +11,15 @@
 @endsection
 
 @section('content')
+<style>
+@media print {
+    body * { visibility: hidden !important; }
+    #area-imprimir, #area-imprimir * { visibility: visible !important; }
+    #area-imprimir { position: absolute; left: 0; top: 0; width: 100%; }
+    @page { size: Letter; margin: 1cm; }
+    .btn, nav, header, footer { display: none !important; }
+}
+</style>
     <div class="bg-white rounded-xl shadow-lg p-6">
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
             <div>
@@ -29,6 +38,10 @@
                 </p>
             </div>
             <div class="mt-4 md:mt-0">
+                <button onclick="window.print()" 
+                        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                    <i class="fas fa-print mr-2"></i>Imprimir
+                </button>
                 <a href="{{ route('Historico.index') }}" 
                    class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
                     <i class="fas fa-search mr-2"></i>Nueva Consulta
@@ -43,7 +56,7 @@
                 <input type="hidden" name="fecha_ini" value="{{ isset($fi) ? $fi->format('Y-m-d') : '' }}">
                 <input type="hidden" name="fecha_fin" value="{{ isset($ff) ? $ff->format('Y-m-d') : '' }}">
                 
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                {{-- <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div class="md:col-span-2">
                         <div class="relative">
                             <input type="text" 
@@ -68,7 +81,7 @@
                         <button type="submit" 
                                 class="flex-1 px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-semibold">
                             <i class="fas fa-search mr-2"></i>Buscar
-                        </button>
+                        </button> 
                         @if(request('search') || request('type'))
                             <a href="{{ route('Historico.index') }}" 
                                class="px-4 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
@@ -76,13 +89,14 @@
                                 <i class="fas fa-times"></i>
                             </a>
                         @endif
-                    </div>
+                    </div> --}}
                 </div>
             </form>
         @endif
 
         @if(isset($ingresos) && $ingresos->count() > 0)
             <!-- Información de resultados -->
+<div id="area-imprimir">
             <div class="mb-4 text-sm text-gray-600">
                 Mostrando <span class="font-semibold">{{ $ingresos->firstItem() }}</span> a 
                 <span class="font-semibold">{{ $ingresos->lastItem() }}</span> de 

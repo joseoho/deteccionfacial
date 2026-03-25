@@ -3,18 +3,23 @@
     
     <div class="mb-6">
         <label for="empleado_id" class="block text-sm font-medium text-gray-700 mb-2">
-            <i class="fas fa-id-card mr-2"></i><strong>Cédula (Opcional - Se detectará automáticamente)</strong>
+            {{-- <i class="fas fa-id-card mr-2"></i><strong>Cédula (Opcional - Se detectará automáticamente)</strong> --}}
+            <i class="fas fa-id-card mr-2"></i><strong>Inroduzca Cédula </strong>
         </label>
         <input type="number" 
                name="empleado_id" 
                id="empleado_id" 
                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
-               placeholder="Ingrese número de cédula (opcional)" 
+               placeholder="Ingrese número de cédula" 
                autofocus>
-        <p class="mt-2 text-sm text-gray-600">
+        {{-- <p class="mt-2 text-sm text-gray-600">
             <i class="fas fa-info-circle mr-1"></i>
             Si no ingresa la cédula, el sistema intentará reconocerla automáticamente mediante reconocimiento facial
-        </p>
+        </p> --}}
+        <p class="mt-2 text-sm text-gray-600">
+            <i class="fas fa-info-circle mr-1"></i>
+            Introduzca su documento de identidad y presione la tecla Enter, para capturar su rostro y registrar su ingreso/salida
+        </p> 
     </div>
     
     <div class="video-container mb-6">
