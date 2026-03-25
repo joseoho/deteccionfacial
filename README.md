@@ -38,4 +38,4 @@ Abre el archivo .env y configura la conexión a la base de datos (DB_DATABASE, D
 - **Instalar Dependencias de Frontend (Opcional): Si el proyecto usa compilación de activos (Vite/Mix), ejecuta npm install && npm run dev o npm run build.**
 - **Iniciar el Servidor: Ejecuta php artisan serve para levantar el servidor local.** 
 
-- **Asegúrate de tener PHP, Composer y MySQL/MariaDB instalados y configurados antes de iniciar, preferiblemente PHP 8.1 o superior.**
+- **Asegúrate de tener servidor WEB de tu preferencia, PHP, Composer, Git, Node, MySQL/MariaDB instalados y configurados antes de iniciar, preferiblemente PHP 8.1 o superior.**
