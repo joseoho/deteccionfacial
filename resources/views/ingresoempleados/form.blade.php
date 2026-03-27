@@ -10,7 +10,7 @@
                name="empleado_id" 
                id="empleado_id" 
                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
-               placeholder="Ingrese número de cédula" 
+               placeholder="Ingrese número de cédula/Id Empleado" 
                autofocus>
         {{-- <p class="mt-2 text-sm text-gray-600">
             <i class="fas fa-info-circle mr-1"></i>

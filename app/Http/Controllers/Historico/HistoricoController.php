@@ -7,6 +7,11 @@ use App\Models\employee;
 use App\Models\timemark;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+// use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\HistoricoExport;
+use App\Exports\HistoricoAgrupadoExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 use Carbon\Carbon;
 
 class HistoricoController extends Controller
@@ -75,6 +80,88 @@ class HistoricoController extends Controller
             return redirect()->route('Historico.index')
                 ->with('noexiste', 'No se encontraron registros para el rango de fechas seleccionado.');
         }
+    }
+
+    public function exportExcel(Request $request)
+    {
+        set_time_limit(300);
+        
+        // Obtener parámetros de la sesión o del request
+        $cedula = $request->get('empleado_id', session('export_cedula'));
+        $fi = Carbon::parse($request->get('fecha_ini', session('export_fi')) . ' 00:00:00', 'America/Caracas');
+        $ff = Carbon::parse($request->get('fecha_fin', session('export_ff')) . ' 23:59:59', 'America/Caracas');
+        $search = $request->get('search', session('export_search'));
+        $type = $request->get('type', session('export_type'));
+        
+        // Consulta para obtener todos los registros (sin paginación)
+        $query = timemark::where('cinumber', $cedula)
+            ->whereBetween('created_at', [$fi, $ff]);
+        
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('cinumber', 'like', "%{$search}%")
+                  ->orWhere('type', 'like', "%{$search}%");
+            });
+        }
+        
+        if ($type) {
+            $query->where('type', $type);
+        }
+        
+        $ingresos = $query->orderBy('created_at', 'desc')->get();
+        
+        if ($ingresos->count() == 0) {
+            return redirect()->back()->with('error', 'No hay datos para exportar');
+        }
+        
+        // Generar nombre del archivo
+        $nombreArchivo = 'historico_' . $cedula . '_' . $fi->format('Ymd') . '_' . $ff->format('Ymd') . '.xlsx';
+        
+        // Exportar
+        return Excel::download(new HistoricoExport($ingresos, $cedula, $fi, $ff), $nombreArchivo);
+    }
+
+    public function exportAgrupado(Request $request)
+    {
+        set_time_limit(300);
+        
+        // Obtener parámetros de la sesión o del request
+        $cedula = $request->get('empleado_id', session('export_cedula'));
+        $fi = Carbon::parse($request->get('fecha_ini', session('export_fi')) . ' 00:00:00', 'America/Caracas');
+        $ff = Carbon::parse($request->get('fecha_fin', session('export_ff')) . ' 23:59:59', 'America/Caracas');
+        $search = $request->get('search', session('export_search'));
+        $type = $request->get('type', session('export_type'));
+        
+        // Consulta para obtener todos los registros (sin paginación)
+        $query = timemark::where('cinumber', $cedula)
+            ->whereBetween('created_at', [$fi, $ff]);
+        
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('cinumber', 'like', "%{$search}%")
+                  ->orWhere('type', 'like', "%{$search}%");
+            });
+        }
+        
+        if ($type) {
+            $query->where('type', $type);
+        }
+        
+        $ingresos = $query->orderBy('created_at', 'asc')->get();
+        
+        if ($ingresos->count() == 0) {
+            return redirect()->back()->with('error', 'No hay datos para exportar');
+        }
+        
+        // Obtener nombre del empleado
+        $empleado = employee::where('cinumber', $cedula)->first();
+        $nombreEmpleado = $empleado ? $empleado->name : 'Empleado';
+        
+        // Generar nombre del archivo
+        $nombreArchivo = 'historico_agrupado_' . str_replace(' ', '_', $nombreEmpleado) . '_' . $fi->format('Ymd') . '_' . $ff->format('Ymd') . '.xlsx';
+        
+        // Exportar en formato agrupado
+        return Excel::download(new HistoricoAgrupadoExport($ingresos, $fi, $ff), $nombreArchivo);
     }
 
     /**

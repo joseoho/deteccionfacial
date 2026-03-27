@@ -67,44 +67,44 @@ class ingresoempleadocontroller extends Controller
 /**
  * Verificar si ya existe un registro en el rango de tiempo permitido
  */
-private function verificarRegistroExistente($cedula, $tipo, $hora)
-{
-    // Definir los rangos de tiempo para evitar registros duplicados
-    $rangos = [
-        'entrada_manana' => ['inicio' => '06:00', 'fin' => '09:30', 'tipo' => 'entrada'],
-        'salida_mediodia' => ['inicio' => '11:30', 'fin' => '13:30', 'tipo' => 'salida'],
-        'entrada_tarde' => ['inicio' => '13:31', 'fin' => '14:30', 'tipo' => 'entrada'],
-        'salida_noche' => ['inicio' => '17:00', 'fin' => '23:59', 'tipo' => 'salida'],
-    ];
+// private function verificarRegistroExistente($cedula, $tipo, $hora)
+// {
+//     // Definir los rangos de tiempo para evitar registros duplicados
+//     $rangos = [
+//         'entrada_manana' => ['inicio' => '06:00', 'fin' => '12:30', 'tipo' => 'entrada'],
+//         'salida_mediodia' => ['inicio' => '11:30', 'fin' => '13:30', 'tipo' => 'salida'],
+//         'entrada_tarde' => ['inicio' => '13:31', 'fin' => '14:30', 'tipo' => 'entrada'],
+//         'salida_noche' => ['inicio' => '17:00', 'fin' => '23:59', 'tipo' => 'salida'],
+//     ];
     
-    // Determinar en qué rango estamos
-    $horaActual = $hora->format('H:i');
-    $rangoActual = null;
+//     // Determinar en qué rango estamos
+//     $horaActual = $hora->format('H:i');
+//     $rangoActual = null;
     
-    foreach ($rangos as $key => $rango) {
-        if ($horaActual >= $rango['inicio'] && $horaActual <= $rango['fin']) {
-            $rangoActual = $key;
-            break;
-        }
-    }
+//     foreach ($rangos as $key => $rango) {
+//         if ($horaActual >= $rango['inicio'] && $horaActual <= $rango['fin']) {
+//             $rangoActual = $key;
+//             break;
+//         }
+//     }
     
-    if (!$rangoActual) {
-        return false;
-    }
+//     if (!$rangoActual) {
+//         return false;
+//     }
     
-    // Obtener la fecha actual
-    $fechaActual = $hora->format('Y-m-d');
+//     // Obtener la fecha actual
+//     $fechaActual = $hora->format('Y-m-d');
     
-    // Verificar si ya existe un registro en este rango horario hoy
-    $existeRegistro = timemark::where('cinumber', $cedula)
-        ->where('type', $tipo)
-        ->whereDate('created_at', $fechaActual)
-        ->whereTime('created_at', '>=', $rangos[$rangoActual]['inicio'])
-        ->whereTime('created_at', '<=', $rangos[$rangoActual]['fin'])
-        ->exists();
+//     // Verificar si ya existe un registro en este rango horario hoy
+//     $existeRegistro = timemark::where('cinumber', $cedula)
+//         ->where('type', $tipo)
+//         ->whereDate('created_at', $fechaActual)
+//         ->whereTime('created_at', '>=', $rangos[$rangoActual]['inicio'])
+//         ->whereTime('created_at', '<=', $rangos[$rangoActual]['fin'])
+//         ->exists();
     
-    return $existeRegistro;
-}
+//     return $existeRegistro;
+// }
 
 /**
  * Store a newly created resource in storage (versión mejorada)
@@ -113,22 +113,6 @@ public function store(Request $request)
 {
     // Definir la variable de hora de Venezuela
     $nowVenezuela = Carbon::now('America/Caracas');
-    
-    // Determinar el tipo de registro según la hora
-    $tipoRegistro = $this->determinarTipoRegistro($nowVenezuela);
-    
-    // Validar si la hora está dentro de los rangos permitidos
-    if (!$tipoRegistro) {
-        return back()->with('error', '❌ Hora no válida para registrar. Horarios permitidos: ' .
-            '06:00-09:30 (ENTRADA), 11:30-13:30 (SALIDA), 13:31-14:30 (ENTRADA), 17:00 en adelante (SALIDA)');
-    }
-    
-    // Verificar si ya existe un registro en este horario
-    $cedula = $request->empleado_id;
-    if ($this->verificarRegistroExistente($cedula, $tipoRegistro, $nowVenezuela)) {
-        $mensajeTipo = ($tipoRegistro == 'entrada') ? 'entrada' : 'salida';
-        return back()->with('error', "⚠️ Ya se registró una {$mensajeTipo} en este horario hoy. No se puede registrar nuevamente.");
-    }
     
     // Crear estructura de carpetas con fecha de Venezuela
     $mes = $nowVenezuela->format('m');
@@ -141,6 +125,7 @@ public function store(Request $request)
         mkdir($baseDIR, 0755, true);
     }
 
+    $cedula = $request->empleado_id;
     $img = $request->get('data_url');
     $img = str_replace('data:image/png;base64,', '', $img);
     $img = str_replace(' ', '+', $img);
@@ -151,11 +136,17 @@ public function store(Request $request)
     
     $imagePath = $relativePath . $filename;
     
-    if (employee::where('cinumber', $cedula)->exists()) {
+    // Buscar empleado por cédula o por ID
+    $empleado = employee::where('cinumber', $cedula)
+        ->orWhere('id', $cedula)
+        ->first();
+    
+    if ($empleado) {
         $seregistraempleado = new timemark();
-        $seregistraempleado->cinumber = $cedula;
+        // Guardamos la cédula del empleado encontrado
+        $seregistraempleado->cinumber = $empleado->cinumber;
         $seregistraempleado->photourl = $imagePath;
-        $seregistraempleado->type = $tipoRegistro;
+        $seregistraempleado->type = 'ingreso';
         
         // Forzar las fechas con la hora de Venezuela
         $seregistraempleado->created_at = $nowVenezuela;
@@ -163,13 +154,10 @@ public function store(Request $request)
         
         $seregistraempleado->save();
         
-        // Mensaje según el tipo de registro
-        $mensajeTipo = ($tipoRegistro == 'entrada') ? '✅ ENTRADA registrada' : '✅ SALIDA registrada';
-        
-        return back()->with('notification', "{$mensajeTipo} a las " . $nowVenezuela->format('h:i:s A'));
+        return back()->with('notification', 'Registro exitoso para ' . $empleado->name . ' a las ' . $nowVenezuela->format('h:i:s A'));
     }
     
-    return back()->with('noexiste', '❌ Cédula no registrada, verifique');
+    return back()->with('noexiste', 'Cédula no registrada, verifique. (Puede usar cédula o ID)');
 }
     /**
      * Display the specified resource.

@@ -2,21 +2,42 @@
 
 @section('title', 'Registrar Ingreso/Salida')
 
-@section('breadcrumbs')
-    <li><a href="{{ route('home') }}" class="text-gray-500 hover:text-indigo-600"><i class="fas fa-home"></i> Inicio</a></li>
-    <li><i class="fas fa-chevron-right text-gray-400 mx-2"></i></li>
-    <li><a href="{{ route('IngresoEmpleado.index') }}" class="text-gray-500 hover:text-indigo-600">Registro de Ingreso</a></li>
-    <li><i class="fas fa-chevron-right text-gray-400 mx-2"></i></li>
-    <li class="text-gray-900">Nuevo Registro</li>
-    
-@endsection
-
 @section('styles')
 <style>
+    /* Ocultar elementos en modo pantalla completa */
+    .fullscreen-mode .registro-header,
+    .fullscreen-mode .sidebar-info,
+    .fullscreen-mode .recent-records {
+        display: none !important;
+    }
+    
+    .fullscreen-mode .main-content {
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .fullscreen-mode .registro-card {
+        min-height: 100vh;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+    
+    .fullscreen-mode .video-container {
+        max-width: 100% !important;
+        height: calc(100vh - 200px) !important;
+    }
+    
+    .fullscreen-mode #video_frame {
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+    
+    /* Estilos mejorados para registro */
     .video-container {
         position: relative;
         width: 100%;
-        max-width: 640px;
+        max-width: 800px;
         margin: 0 auto;
         background: #000;
         border-radius: 16px;
@@ -71,86 +92,75 @@
         border-radius: 12px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
+    
+    /* Input de cédula estilo kiosco */
+    .kiosk-input {
+        font-size: 2rem;
+        text-align: center;
+        letter-spacing: 2px;
+        font-family: monospace;
+        border: 2px solid #e5e7eb;
+        transition: all 0.3s ease;
+    }
+    
+    .kiosk-input:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        transform: scale(1.02);
+    }
+    
+    /* Botones grandes para kiosco */
+    .kiosk-btn {
+        padding: 1rem 2rem;
+        font-size: 1.25rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+    
+    .kiosk-btn:active {
+        transform: scale(0.98);
+    }
+    
+    /* Animación de pulso para estado */
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
+    }
+    
+    .status-pulse {
+        animation: pulse 1.5s ease-in-out infinite;
+    }
 </style>
 @endsection
 
 @section('content')
-
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <!-- Main Content -->
-        <div class="lg:col-span-2">
-            <div class="bg-white rounded-xl shadow-lg p-6">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                    <i class="fas fa-camera text-indigo-600 mr-3"></i>Captura de Imagen para Registro de Ingreso/Salida
-                </h2>
-
-                @include('ingresoempleados.form')
+<div class="main-content">
+    <div class="registro-card bg-white rounded-xl shadow-lg overflow-hidden">
+        <!-- Header con hora actual -->
+        {{-- <div class="registro-header bg-gradient-to-r from-indigo-600 to-purple-600 p-6 text-white">
+            <div class="text-center">
+                <i class="fas fa-fingerprint text-5xl mb-3"></i>
+                <h1 class="text-3xl font-bold">Registro de Asistencia</h1>
+                <p class="text-indigo-100 mt-2">Sistema de Control de Asistencia</p>
+            </div> 
+            <div class="mt-4 text-center border-t border-indigo-400 pt-4">
+                <div class="text-5xl font-mono font-bold" id="horaActual"></div>
+                <div class="text-lg mt-1" id="fechaActual"></div>
             </div>
-        </div>
+        </div> --}}
 
-        <!-- Sidebar -->
-        <div class="space-y-6">
-            <!-- Instructions -->
-            <div class="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl shadow-lg p-6 text-white">
-                <h3 class="text-lg font-bold mb-4 flex items-center">
-                    <i class="fas fa-info-circle mr-2"></i>Instrucciones
-                </h3>
-                <ul class="space-y-3 text-sm">
-                    <li class="flex items-start">
-                        <i class="fas fa-check-circle mr-2 mt-1"></i>
-                        <span>Posicione su rostro dentro del círculo</span>
-                    </li>
-                    <li class="flex items-start">
-                        <i class="fas fa-check-circle mr-2 mt-1"></i>
-                        <span>Asegúrese de tener buena iluminación</span>
-                    </li>
-                    <li class="flex items-start">
-                        <i class="fas fa-check-circle mr-2 mt-1"></i>
-                        <span>Mire directamente a la cámara</span>
-                    </li>
-                    {{-- <li class="flex items-start">
-                        <i class="fas fa-check-circle mr-2 mt-1"></i>
-                        <span>El sistema detectará automáticamente su identidad</span>
-                    </li> --}}
-                    <li class="flex items-start">
-                        <i class="fas fa-check-circle mr-2 mt-1"></i>
-                        <span>Introduzca su documento de identidad y presione la tecla enter</span>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- Recent Records -->
-            <div class="bg-white rounded-xl shadow-lg p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                    <i class="fas fa-clock text-indigo-600 mr-2"></i>Registros Recientes
-                </h3>
-                <div class="space-y-3 max-h-96 overflow-y-auto">
-                    @if(isset($ingresos) && $ingresos->count() > 0)
-                        @foreach($ingresos->take(5) as $ingreso)
-                            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                                <div>
-                                    <p class="font-semibold text-gray-900">{{ $ingreso->cinumber }}</p>
-                                    <p class="text-xs text-gray-600">
-                                        <i class="fas fa-calendar mr-1"></i>{{ $ingreso->created_at->format('d/m/Y H:i') }}
-                                    </p>
-                                </div>
-                                <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $ingreso->type == 'ingreso' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
-                                    {{ strtoupper($ingreso->type ?? 'N/A') }}
-                                </span>
-                            </div>
-                        @endforeach
-                    @else
-                        <p class="text-gray-500 text-center py-4">No hay registros recientes</p>
-                    @endif
-                </div>
-            </div>
+        <div class="p-6">
+            @include('ingresoempleados.form')
         </div>
     </div>
+</div>
 @endsection
 
 @section('scripts')
 <script>
 // Variables globales
+let stream = null;
+let captured = false;
 const videoFrame = document.getElementById('video_frame');
 const canvasFrame = document.getElementById('canvas_frame');
 const snapFrame = document.getElementById('snap_frame');
@@ -160,103 +170,219 @@ const previewImage = document.getElementById('previewImage');
 const statusIndicator = document.getElementById('statusIndicator');
 const dataUrlInput = document.getElementById('data_url');
 const ingresoForm = document.getElementById('ingresoForm');
-let stream = null;
-let captured = false;
+const empleadoIdInput = document.getElementById('empleado_id');
+
+// Actualizar hora en tiempo real
+function updateClock() {
+    const now = new Date();
+    const horaElement = document.getElementById('horaActual');
+    const fechaElement = document.getElementById('fechaActual');
+    
+    if (horaElement) {
+        horaElement.textContent = now.toLocaleTimeString('es-VE', { 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit',
+            hour12: false
+        });
+    }
+    
+    if (fechaElement) {
+        fechaElement.textContent = now.toLocaleDateString('es-VE', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    }
+}
 
 // Inicializar webcam
-async function init() {
+async function initWebcam() {
     try {
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+        
         stream = await navigator.mediaDevices.getUserMedia({
             audio: false,
             video: {
-                width: { ideal: 640 },
-                height: { ideal: 480 },
+                width: { ideal: 1280 },
+                height: { ideal: 720 },
                 facingMode: 'user'
             }
         });
-        videoFrame.srcObject = stream;
+        
+        if (videoFrame) {
+            videoFrame.srcObject = stream;
+            videoFrame.onloadedmetadata = () => {
+                videoFrame.play();
+            };
+        }
+        
+        if (statusIndicator) {
+            statusIndicator.className = 'px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800';
+            statusIndicator.innerHTML = '<i class="fas fa-camera mr-1"></i>Cámara lista';
+        }
+        
     } catch (e) {
         console.error('Error accessing webcam:', e);
+        if (statusIndicator) {
+            statusIndicator.className = 'px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800';
+            statusIndicator.innerHTML = '<i class="fas fa-exclamation-triangle mr-1"></i>Error de cámara';
+        }
         alert('No se pudo acceder a la cámara. Por favor, permita el acceso a la cámara en la configuración del navegador.');
     }
 }
 
 // Capturar imagen
-if (snapFrame) {
-    snapFrame.addEventListener('click', function() {
-        if (!stream) {
-            alert('La cámara no está lista. Por favor, espere un momento.');
-            return;
-        }
-        
-        const context = canvasFrame.getContext('2d');
-        canvasFrame.width = videoFrame.videoWidth;
-        canvasFrame.height = videoFrame.videoHeight;
-        context.drawImage(videoFrame, 0, 0, canvasFrame.width, canvasFrame.height);
-        
-        const imageData = canvasFrame.toDataURL('image/png');
-        dataUrlInput.value = imageData;
-        if (previewImage) {
-            previewImage.src = imageData;
-        }
-        
-        // Mostrar preview
-        if (previewContainer) {
-            previewContainer.style.display = 'block';
-        }
-        snapFrame.style.display = 'none';
-        if (retakeFrame) {
-            retakeFrame.style.display = 'inline-block';
-        }
-        captured = true;
-        
-        // Detener video stream
-        if (stream) {
-            stream.getTracks().forEach(track => track.stop());
-            stream = null;
-        }
-        
-        // Cambiar estado
+function captureImage() {
+    if (!stream) {
+        alert('La cámara no está lista. Por favor, espere un momento.');
+        return;
+    }
+    
+    if (!empleadoIdInput || !empleadoIdInput.value.trim()) {
+        alert('Por favor, ingrese primero el número de cédula');
+        empleadoIdInput?.focus();
+        return;
+    }
+    
+    if (statusIndicator) {
+        statusIndicator.className = 'px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800 status-pulse';
+        statusIndicator.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Capturando...';
+    }
+    
+    const context = canvasFrame.getContext('2d');
+    canvasFrame.width = videoFrame.videoWidth;
+    canvasFrame.height = videoFrame.videoHeight;
+    context.drawImage(videoFrame, 0, 0, canvasFrame.width, canvasFrame.height);
+    
+    const imageData = canvasFrame.toDataURL('image/png');
+    dataUrlInput.value = imageData;
+    
+    if (previewImage) {
+        previewImage.src = imageData;
+    }
+    
+    if (previewContainer) {
+        previewContainer.style.display = 'block';
+    }
+    
+    if (snapFrame) snapFrame.style.display = 'none';
+    if (retakeFrame) retakeFrame.style.display = 'inline-block';
+    captured = true;
+    
+    // Detener video stream
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+    }
+    
+    if (statusIndicator) {
+        statusIndicator.className = 'px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800';
+        statusIndicator.innerHTML = '<i class="fas fa-check-circle mr-1"></i>Foto capturada';
+    }
+    
+    // Auto-enviar después de 500ms
+    setTimeout(() => {
         if (statusIndicator) {
-            statusIndicator.className = 'px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800';
-            statusIndicator.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Procesando...';
+            statusIndicator.className = 'px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800';
+            statusIndicator.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Enviando registro...';
+        }
+        ingresoForm.submit();
+    }, 500);
+}
+
+// Recapturar imagen
+function recaptureImage() {
+    captured = false;
+    if (previewContainer) {
+        previewContainer.style.display = 'none';
+    }
+    if (snapFrame) snapFrame.style.display = 'inline-block';
+    if (retakeFrame) retakeFrame.style.display = 'none';
+    if (dataUrlInput) dataUrlInput.value = '';
+    
+    if (statusIndicator) {
+        statusIndicator.className = 'px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800';
+        statusIndicator.innerHTML = '<i class="fas fa-camera mr-1"></i>Reiniciando cámara...';
+    }
+    
+    initWebcam();
+}
+
+// Atajos de teclado
+function setupKeyboardShortcuts() {
+    document.addEventListener('keydown', function(e) {
+        // ENTER - Capturar foto (si no está capturada)
+        if (e.key === 'Enter' && !captured && snapFrame && snapFrame.style.display !== 'none') {
+            e.preventDefault();
+            captureImage();
         }
         
-        // Auto-enviar formulario después de un breve delay
-        setTimeout(() => {
+        // ESC - Limpiar y recapturar
+        if (e.key === 'Escape' && captured) {
+            e.preventDefault();
+            recaptureImage();
+            if (empleadoIdInput) {
+                empleadoIdInput.value = '';
+                empleadoIdInput.focus();
+            }
+        }
+        
+        // CTRL + ENTER - Enviar formulario manualmente
+        if (e.ctrlKey && e.key === 'Enter' && captured) {
+            e.preventDefault();
             if (statusIndicator) {
-                statusIndicator.className = 'px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800';
-                statusIndicator.innerHTML = '<i class="fas fa-check-circle mr-1"></i>Enviando...';
+                statusIndicator.className = 'px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800';
+                statusIndicator.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Enviando...';
             }
             ingresoForm.submit();
-        }, 500);
-    });
-}
-
-// Retomar foto
-if (retakeFrame) {
-    retakeFrame.addEventListener('click', function() {
-        captured = false;
-        if (previewContainer) {
-            previewContainer.style.display = 'none';
         }
-        snapFrame.style.display = 'inline-block';
-        retakeFrame.style.display = 'none';
-        dataUrlInput.value = '';
         
-        // Reiniciar webcam
-        init();
+        // F5 - Recapturar
+        if (e.key === 'F5') {
+            e.preventDefault();
+            recaptureImage();
+        }
     });
 }
 
-// Inicializar cuando se carga la página
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-} else {
-    init();
+// Configurar auto-foco en el campo de cédula
+function setupAutoFocus() {
+    if (empleadoIdInput) {
+        empleadoIdInput.focus();
+        
+        // Estilo para feedback visual
+        empleadoIdInput.addEventListener('focus', function() {
+            this.parentElement.classList.add('ring-2', 'ring-indigo-500');
+        });
+        
+        empleadoIdInput.addEventListener('blur', function() {
+            this.parentElement.classList.remove('ring-2', 'ring-indigo-500');
+        });
+    }
 }
 
-// Detener webcam al enviar formulario
+// Inicializar todo
+function init() {
+    updateClock();
+    setInterval(updateClock, 1000);
+    initWebcam();
+    setupKeyboardShortcuts();
+    setupAutoFocus();
+}
+
+// Configurar eventos
+if (snapFrame) {
+    snapFrame.addEventListener('click', captureImage);
+}
+
+if (retakeFrame) {
+    retakeFrame.addEventListener('click', recaptureImage);
+}
+
 if (ingresoForm) {
     ingresoForm.addEventListener('submit', function() {
         if (stream) {
@@ -265,15 +391,11 @@ if (ingresoForm) {
     });
 }
 
-// Permitir Enter para capturar
-const empleadoIdInput = document.getElementById('empleado_id');
-if (empleadoIdInput) {
-    empleadoIdInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter' && !captured && snapFrame) {
-            e.preventDefault();
-            snapFrame.click();
-        }
-    });
+// Iniciar cuando la página carga
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
 }
 </script>
 @endsection

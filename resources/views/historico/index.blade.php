@@ -38,6 +38,28 @@
                 </p>
             </div>
             <div class="mt-4 md:mt-0">
+                <!-- Botón Exportar Excel -->
+                {{-- <a href="{{ route('Historico.export', [
+                    'empleado_id' => $cedula ?? '',
+                    'fecha_ini' => isset($fi) ? $fi->format('Y-m-d') : '',
+                    'fecha_fin' => isset($ff) ? $ff->format('Y-m-d') : '',
+                    'search' => request('search'),
+                    'type' => request('type')
+                ]) }}" 
+                   class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
+                    <i class="fas fa-file-excel mr-2"></i>Exportar Excel
+                </a> --}}
+                <!-- Botón Exportar Excel Agrupado -->
+                    <a href="{{ route('Historico.export.agrupado', [
+                        'empleado_id' => $cedula ?? '',
+                        'fecha_ini' => isset($fi) ? $fi->format('Y-m-d') : '',
+                        'fecha_fin' => isset($ff) ? $ff->format('Y-m-d') : '',
+                        'search' => request('search'),
+                        'type' => request('type')
+                    ]) }}" 
+                    class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors">
+                        <i class="fas fa-table mr-2"></i>Exportar Agrupado
+                    </a>
                 <button onclick="window.print()" 
                         class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
                     <i class="fas fa-print mr-2"></i>Imprimir

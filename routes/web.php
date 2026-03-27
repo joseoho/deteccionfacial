@@ -45,6 +45,9 @@ Route::resource('Historico', HistoricoController::class)->names([
     'destroy' => 'Historico.destroy',
 ]);
 
+Route::get('/historico/export', [HistoricoController::class, 'exportExcel'])->name('Historico.export');
+Route::get('/historico/export-agrupado', [HistoricoController::class, 'exportAgrupado'])->name('Historico.export.agrupado');
+
 Route::resource('ReporteIngresosDiarios', Reporteingresosdiarios::class)->names([
     'index' => 'ReporteIngresosDiarios.index',
     'create' => 'ReporteIngresosDiarios.create',
