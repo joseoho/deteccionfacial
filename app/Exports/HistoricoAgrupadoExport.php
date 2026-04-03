@@ -24,6 +24,9 @@ class HistoricoAgrupadoExport implements FromCollection, WithHeadings, WithMappi
         $this->ingresos = $ingresos;
         $this->fi = $fi;
         $this->ff = $ff;
+
+                Carbon::setLocale('es');
+
     }
 
     /**
@@ -44,7 +47,8 @@ class HistoricoAgrupadoExport implements FromCollection, WithHeadings, WithMappi
                 
                 $agrupados[$key] = (object)[
                     'fecha' => $fecha,
-                    'fecha_formateada' => Carbon::parse($ingreso->created_at)->format('d/m/Y'),
+                    'dia_semana' => Carbon::parse($ingreso->created_at)->translatedFormat('l'), // Nombre del día completo
+                    'dia_semana_corto' => Carbon::parse($ingreso->created_at)->translatedFormat('D'), // Nombre del día corto
                     'cedula' => $cedula,
                     'nombre' => $empleado ? $empleado->name : 'No encontrado',
                     'horas' => [], // Array para almacenar solo las horas
@@ -74,7 +78,7 @@ class HistoricoAgrupadoExport implements FromCollection, WithHeadings, WithMappi
     public function headings(): array
     {
         return [
-            'Fecha',
+            'Día',
             'Cédula',
             'Nombre Empleado',
             'Horario Registrado',
@@ -92,7 +96,7 @@ class HistoricoAgrupadoExport implements FromCollection, WithHeadings, WithMappi
         $total = count($row->horas);
         
         return [
-            $row->fecha_formateada,
+            $row->dia_semana, // Mostrar nombre completo del día
             $row->cedula,
             $row->nombre,
             $horas,
@@ -122,6 +126,17 @@ class HistoricoAgrupadoExport implements FromCollection, WithHeadings, WithMappi
             ],
         ]);
         
+        // Estilo para la columna de días
+        $sheet->getStyle('A2:A' . ($sheet->getHighestRow()))->applyFromArray([
+            'font' => [
+                'bold' => true,
+            ],
+            'alignment' => [
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+            ],
+        ]);
+        
         // Estilo para la columna de horas
         $sheet->getStyle('D2:D' . ($sheet->getHighestRow()))->applyFromArray([
             'font' => [
@@ -146,11 +161,11 @@ class HistoricoAgrupadoExport implements FromCollection, WithHeadings, WithMappi
         ]);
         
         // Ancho de columnas
-        $sheet->getColumnDimension('A')->setWidth(15);
-        $sheet->getColumnDimension('B')->setWidth(15);
-        $sheet->getColumnDimension('C')->setWidth(30);
-        $sheet->getColumnDimension('D')->setWidth(35);
-        $sheet->getColumnDimension('E')->setWidth(10);
+        $sheet->getColumnDimension('A')->setWidth(20);  // Día
+        $sheet->getColumnDimension('B')->setWidth(15);  // Cédula
+        $sheet->getColumnDimension('C')->setWidth(30);  // Nombre
+        $sheet->getColumnDimension('D')->setWidth(35);  // Horario
+        $sheet->getColumnDimension('E')->setWidth(10);  // Total
         
         return [];
     }
